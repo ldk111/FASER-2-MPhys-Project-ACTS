@@ -1,0 +1,40 @@
+cmake_minimum_required(VERSION 3.11)
+
+project(ActsDownstreamProject)
+
+# find all optional components that are build with ACTS_BUILD_EVERYTHING=on
+find_package(
+  Acts CONFIG REQUIRED
+  COMPONENTS
+    Core
+    Fatras
+    PluginAutodiff
+    PluginIdentification
+    PluginJson
+    PluginLegacy
+    PluginTGeo)
+
+# place artifacts in GNU-like paths, e.g. binaries in `<build>/bin`
+include(GNUInstallDirs)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+
+# link with all optional components even when they are not really used
+# to check e.g. for possible linker issues
+add_executable(ShowActsVersion ShowActsVersion.cpp)
+target_link_libraries(
+  ShowActsVersion
+  PRIVATE
+    ActsCore
+    ActsFatras
+    ActsPluginIdentification
+    ActsPluginJson
+    ActsPluginLegacy
+    ActsPluginTGeo)
+
+option(DD4HEP "Build with DD4hep" ON)
+if(DD4HEP)
+  message(STATUS "Adding DD4hep plugin")
+  find_package(Acts CONFIG REQUIRED COMPONENTS PluginDD4hep)
+  target_link_libraries( ShowActsVersion PRIVATE ActsPluginDD4hep)
+endif()

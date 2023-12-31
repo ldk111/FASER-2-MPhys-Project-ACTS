@@ -1,0 +1,131 @@
+stages:
+  - build
+  - test
+
+default:
+  image: gitlab-registry.cern.ch/acts/opendatadetector/ubuntu2004:v29
+  tags: 
+    - docker
+
+variables:
+  ACTS_VERSION: v20.0.0-rc.1
+  ACTS_GIT_URL: https://github.com/acts-project/acts.git
+
+
+build-acts:
+  stage: build
+  cache:
+    key: "acts_$ACTS_VERSION"
+    policy: pull-push
+    paths: 
+      - acts-install
+  artifacts:
+    paths:
+      - acts-install
+  script:
+    - git clone --depth 1 ${ACTS_GIT_URL} --branch ${ACTS_VERSION}
+    - > 
+      test -d acts-install ||
+      (cmake -S acts -B acts-build -GNinja
+      -DCMAKE_BUILD_TYPE=Release 
+      -DCMAKE_CXX_STANDARD=17 
+      -DCMAKE_INSTALL_PREFIX=$PWD/acts-install
+      -DACTS_BUILD_EXAMPLES=ON
+      -DACTS_BUILD_EXAMPLES_DD4HEP=ON
+      -DACTS_BUILD_EXAMPLES_GEANT4=ON
+      -DACTS_BUILD_PLUGIN_DD4HEP=ON
+      -DACTS_BUILD_ANALYSIS_APPS=ON
+      -DACTS_BUILD_EXAMPLES_PYTHON_BINDINGS=ON
+      && cmake --build acts-build --
+      && cmake --install acts-build
+      && cp -r acts/Examples/Scripts/Python/* acts-install/python) # this is a workaround, see https://github.com/acts-project/acts/issues/1242
+
+build-odd:
+  stage: build
+  artifacts:
+    paths:
+      - odd-install
+  script:
+    - >
+      cmake -S . -B odd-build -GNinja
+      -DCMAKE_INSTALL_PREFIX=$PWD/odd-install
+    - cmake --build odd-build --
+    - cmake --install odd-build
+
+run-full-chain:
+  stage: test
+  needs: 
+    - build-odd
+    - build-acts
+  artifacts:
+    paths:
+      - full_chain
+    expire_in: 1 month
+    when: always
+  script:
+    - ls -al acts-install/python
+    - source acts-install/bin/this_acts.sh
+    - source odd-install/bin/this_odd.sh
+    - source acts-install/python/setup.sh
+    - source /usr/local/bin/thisdd4hep.sh
+    - mkdir full_chain
+    - ci/full_chain_odd.py -o output -n 100000 2>&1 > full_chain/output.log
+    - >
+      cp output/performance_ckf.root full_chain
+      && cp output/performance_seeding_hists.root full_chain
+    - pip install -r ci/requirements.txt
+    - source /usr/local/bin/thisroot.sh
+    - >
+      histcmp 
+      --label-reference $(cat ci/reference/commit.txt) 
+      --label-monitored $CI_COMMIT_SHORT_SHA
+      --title "ODD full chain"
+      -o full_chain/full_chain.html
+      -p full_chain/plots
+      full_chain/performance_ckf.root
+      ci/reference/performance_ckf.root
+
+run-material-composition:
+  stage: test
+  needs: 
+    - build-odd
+    - build-acts
+  artifacts:
+    paths:
+      - plots
+    expire_in: 1 month
+    when: always
+  script:
+    - source acts-install/bin/this_acts.sh
+    - source odd-install/bin/this_odd.sh
+    - source acts-install/python/setup.sh
+    - ci/download_geant4_data.sh
+    - source /usr/local/bin/geant4.sh
+    - source /usr/local/bin/thisdd4hep.sh
+    - ci/run_material_recording.py -o g4 -n 100000
+    - hadd g4/geant4_material_tracks.root g4/geant4_material_tracks_*.root
+    - mkdir plots
+    - ci/material_composition.sh g4/geant4_material_tracks.root plots/material_composition.root
+    - pip install -r ci/requirements.txt
+    - source /usr/local/bin/thisroot.sh
+    - ci/make_material_plots.py plots/material_composition.root plots
+    - >
+      histcmp 
+      --label-reference $(cat ci/reference/commit.txt) 
+      --label-monitored $CI_COMMIT_SHORT_SHA
+      --title "ODD material composition"
+      -o plots/material.html
+      plots/material_composition.root
+      ci/reference/material_composition.root
+
+run-ddsim:
+  stage: test
+  needs: []
+  script:
+    - ci/download_geant4_data.sh
+    - mkdir build
+    - cmake -S . -B build -GNinja
+    - cmake --build build
+    - source /usr/local/bin/thisdd4hep.sh
+    - export LD_LIBRARY_PATH=$PWD/build/factory:$LD_LIBRARY_PATH
+    - python3 $(which ddsim) --enableGun --numberOfEvents 100 --gun.thetaMin 0.1415 --gun.thetaMax 3.0  --gun.distribution uniform --compactFile xml/OpenDataDetector.xml --outputFile ddsim.root

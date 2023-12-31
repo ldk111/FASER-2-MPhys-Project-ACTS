@@ -1,0 +1,4 @@
+add_executable(ActsUnitTestSeedFinder SeedFinderTest.cpp)
+target_link_libraries(ActsUnitTestSeedFinder PRIVATE ActsCore Boost::boost)
+
+add_unittest(EstimateTrackParamsFromSeedTest EstimateTrackParamsFromSeedTest.cpp)
