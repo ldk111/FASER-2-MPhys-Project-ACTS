@@ -186,9 +186,9 @@ ActsExamples::AlignedTelescope::buildDetector(
 
   // The volume transform
   //NEW CODE
-  //Acts::Translation3 transVol(offsets[0], offsets[1],
+  //Acts::Translation3 transVol(offsets[0][0], offsets[1][0],
   //                            (positions.front() + positions.back()) * 0.5);
-  Acts::Translation3 transVol(offsets[0][5], offsets[1][5],
+  Acts::Translation3 transVol(0.0, 0.0,
                               (positions.front() + positions.back()) * 0.5);
   Acts::Transform3 trafoVol(rotation * transVol);
 
