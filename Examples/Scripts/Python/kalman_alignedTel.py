@@ -38,9 +38,9 @@ def runTruthTrackingKalman(
         addVertexFitting,
         VertexFinder,
     )
-
+#changed acts.logging.INFO to acts.logging.FATAL
     s = s or acts.examples.Sequencer(
-        events=200000, numThreads=-1, logLevel=acts.logging.INFO
+        events=200000, numThreads=-1, logLevel=acts.logging.FATAL
     )
 
     rnd = acts.examples.RandomNumbers()
@@ -127,11 +127,11 @@ def runTruthTrackingKalman(
     #)
 
 
-
+    #Changed all acts.logging.INFO to acts.logging.FATAL
     #Output
     s.addWriter(
         acts.examples.RootTrajectoryStatesWriter(
-            level=acts.logging.INFO,
+            level=acts.logging.FATAL,
             inputTrajectories="trajectories",
             inputParticles="truth_seeds_selected",
             inputSimHits="simhits",
@@ -143,7 +143,7 @@ def runTruthTrackingKalman(
 
     s.addWriter(
         acts.examples.RootTrajectorySummaryWriter(
-            level=acts.logging.INFO,
+            level=acts.logging.FATAL,
             inputTrajectories="trajectories",
             inputParticles="truth_seeds_selected",
             inputMeasurementParticlesMap="measurement_particles_map",
@@ -153,7 +153,7 @@ def runTruthTrackingKalman(
 
     s.addWriter(
         acts.examples.TrackFinderPerformanceWriter(
-            level=acts.logging.INFO,
+            level=acts.logging.FATAL,
             inputProtoTracks="sorted_truth_particle_tracks"
             if directNavigation
             else "truth_particle_tracks",
@@ -165,7 +165,7 @@ def runTruthTrackingKalman(
 
     s.addWriter(
         acts.examples.TrackFitterPerformanceWriter(
-            level=acts.logging.INFO,
+            level=acts.logging.FATAL,
             inputTrajectories="trajectories",
             inputParticles="truth_seeds_selected",
             inputMeasurementParticlesMap="measurement_particles_map",
@@ -185,7 +185,7 @@ if "__main__" == __name__:
     rand_ = random.randint(0, 50000)
     #
     detector_misal, trackingGeometry_misal, decorators_misal = acts.examples.AlignedTelescopeDetector.create(
-        bounds=[500, 1500], positions=[10000, 10500, 11000,  19500, 20000,20500], binValue=0, offsets=[[0.0,0.0,0.2,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0]], thickness=4,rnd=rand_, 
+        bounds=[500, 1500], positions=[10000, 10500, 11000,  19500, 20000,20500], binValue=0, offsets=[[0.0,0.0,0.0,0.0,0.0,0.0], [0.0,0.0,0.0,0.0,0.0,0.0]], thickness=4,rnd=rand_, 
         sigmaInPlane=0.0 , sigmaOutPlane=0.0 , sigmaOutRot=0.0 , sigmaInRot=0.00 
     )
 
@@ -206,7 +206,7 @@ if "__main__" == __name__:
         trackingGeometry_misal=trackingGeometry_misal,
         field=field,
         digiConfigFile=digiConfigFile,
-        outputDir="./Output/200k_0.2_misal_test",
+        outputDir="./Output/200k_0_misal_test",
         # outputDir="./Output_ttk/Out9",
         inputParticlePath=inputParticlePath,
     ).run()
