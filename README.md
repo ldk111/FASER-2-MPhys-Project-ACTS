@@ -12,7 +12,7 @@ or *A Common Tracking Software* if you do not like recursive acronyms
 Acts is an experiment-independent toolkit for (charged) particle track
 reconstruction in (high energy) physics experiments implemented in modern C++.
 
-More information can be found in the [Acts documentation](https://acts.readthedocs.io/).
+More information can be found in the [Acts documentation](https://acts.readthedocs.io/), original repository https://github.com/acts-project/acts.
 
 ## Quick start
 
