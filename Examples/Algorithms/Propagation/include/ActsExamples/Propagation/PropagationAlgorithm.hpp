@@ -96,7 +96,7 @@ class PropagationAlgorithm : public IAlgorithm {
     std::pair<double, double> etaRange = {-4., 4.};
     /// pt range
     std::pair<double, double> ptRange = {100 * Acts::UnitConstants::MeV,
-                                         100 * Acts::UnitConstants::GeV};
+                                         2000 * Acts::UnitConstants::GeV};
     /// looper protection
     double ptLoopers = 500 * Acts::UnitConstants::MeV;
 
