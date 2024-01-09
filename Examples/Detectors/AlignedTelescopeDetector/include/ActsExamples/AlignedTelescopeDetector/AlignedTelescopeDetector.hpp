@@ -46,7 +46,7 @@ struct AlignedTelescopeDetector {
     std::vector<double> positions{{0, 30, 60, 120, 150, 180}};
     //std::array<double, 2> offsets{{0, 0}};
     //NEW CODE
-    std::array<std::array<double, 6>, 2> offsets{{{0,0,0,0,0,1}, {0,0,0,0,0,0}}};
+    std::array<std::array<double, 6>, 3> offsets{{{0,0,0,0,0,0}, {0,0,0,0,0,0}, {0,0,0,0,0,0}}};
     std::array<double, 2> bounds{{25, 100}};
     double thickness{80_um};
     int surfaceType{0};

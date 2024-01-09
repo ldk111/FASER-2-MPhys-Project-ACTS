@@ -91,7 +91,7 @@ ActsExamples::AlignedTelescope::buildDetector(
     std::vector<
         std::shared_ptr<ActsExamples::AlignedTelescope::AlignedTelescopeDetectorElement>>&
         detectorStore,
-    const std::vector<double>& positions, const std::array<std::array<double, 6>, 2>& offsets,
+    const std::vector<double>& positions, const std::array<std::array<double, 6>, 3>& offsets,
     const std::array<double, 2>& bounds, double thickness,
     ActsExamples::AlignedTelescope::AlignedTelescopeSurfaceType surfaceType,
     Acts::BinningValue binValue, int rnd, double sigmaInPlane, double sigmaOutPlane,
@@ -146,7 +146,7 @@ ActsExamples::AlignedTelescope::buildDetector(
 
     //Acts::Translation3 trans(offsets[0], offsets[1], positions[i]);
     //NEW CODE
-    Acts::Translation3 trans(offsets[0][i], offsets[1][i], positions[i]);
+    Acts::Translation3 trans(offsets[0][i], offsets[1][i], positions[i] + offsets[2][i]);
 
     // The transform
 
