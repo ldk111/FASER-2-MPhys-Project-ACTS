@@ -16,6 +16,7 @@
 #include "ActsExamples/Io/Root/RootAthenaNTupleReader.hpp"
 #include "ActsExamples/Io/Root/RootMaterialTrackReader.hpp"
 #include "ActsExamples/Io/Root/RootParticleReader.hpp"
+#include "ActsExamples/Io/Root/RootSimHitReader.hpp"
 #include "ActsExamples/Io/Root/RootTrajectorySummaryReader.hpp"
 
 #include <memory>
@@ -80,5 +81,9 @@ void addInput(Context& ctx) {
                              inputFilePath, outputTrackParameters,
                              outputTruthVtxParameters, outputRecoVtxParameters,
                              outputBeamspotConstraint);
+                             
+  ACTS_PYTHON_DECLARE_READER(ActsExamples::RootSimHitReader, mex,
+                             "RootSimHitReader", treeName, filePath,
+                             simHitCollection);
 }
 }  // namespace Acts::Python
