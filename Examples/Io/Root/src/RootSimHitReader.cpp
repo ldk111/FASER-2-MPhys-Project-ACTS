@@ -8,7 +8,7 @@
 
 #include "ActsExamples/Io/Root/RootSimHitReader.hpp"
 
-#include "Acts/Definitions/PdgParticle.hpp"
+#include "Acts/Utilities/PdgParticle.hpp"
 #include "Acts/Utilities/Logger.hpp"
 #include "ActsExamples/EventData/SimParticle.hpp"
 #include "ActsExamples/Framework/AlgorithmContext.hpp"
