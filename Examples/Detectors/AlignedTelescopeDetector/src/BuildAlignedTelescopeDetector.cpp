@@ -91,7 +91,9 @@ ActsExamples::AlignedTelescope::buildDetector(
     std::vector<
         std::shared_ptr<ActsExamples::AlignedTelescope::AlignedTelescopeDetectorElement>>&
         detectorStore,
-    const std::vector<double>& positions, const std::array<std::array<double, 6>, 3>& offsets,
+    const std::vector<double>& positions, 
+    const std::array<std::array<double, 6>, 3>& offsets,
+    const std::array<std::array<double, 6>, 3>& rotations,
     const std::array<double, 2>& bounds, double thickness,
     ActsExamples::AlignedTelescope::AlignedTelescopeSurfaceType surfaceType,
     Acts::BinningValue binValue, int rnd, double sigmaInPlane, double sigmaOutPlane,
@@ -151,6 +153,12 @@ ActsExamples::AlignedTelescope::buildDetector(
     // The transform
 
     Acts::Transform3 trafo(rotation * trans);
+
+    // Apply rotation in each axis to each plane
+
+    trafo *= Acts::AngleAxis3(rotations[0][i], Acts::Vector3::UnitX());
+    trafo *= Acts::AngleAxis3(rotations[1][i], Acts::Vector3::UnitY());
+    trafo *= Acts::AngleAxis3(rotations[2][i], Acts::Vector3::UnitZ());
 
     applyTransform(trafo, rng,sigmaInPlane, sigmaOutPlane, sigmaOutRot, sigmaInRot);
     // Create the detector element

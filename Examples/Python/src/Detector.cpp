@@ -126,6 +126,7 @@ void addDetector(Context& ctx) {
         .def(py::init<>())
         .def_readwrite("positions", &Config::positions)
         .def_readwrite("offsets", &Config::offsets)
+        .def_readwrite("rotations", &Config::rotations)
         .def_readwrite("bounds", &Config::bounds)
         .def_readwrite("thickness", &Config::thickness)
         .def_readwrite("surfaceType", &Config::surfaceType)

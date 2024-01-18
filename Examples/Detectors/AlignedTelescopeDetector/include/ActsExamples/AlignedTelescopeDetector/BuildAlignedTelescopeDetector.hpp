@@ -34,6 +34,7 @@ enum class AlignedTelescopeSurfaceType {
 /// @param positions is the offset w of different layers in the longitudinal
 /// direction
 /// @param offsets is the offset (u, v) of the layers in the transverse plane
+/// @param rotations is the rotation in x, y, z axes of each of the planes
 /// @param bounds is the surface bound values, i.e. halfX and halfY if plane
 /// surface, and minR and maxR if disc surface
 /// @param thickness is the material thickness of each layer
@@ -58,6 +59,7 @@ std::unique_ptr<const Acts::TrackingGeometry> buildDetector(
     const typename AlignedTelescopeDetectorElement::ContextType& gctx,
     std::vector<std::shared_ptr<AlignedTelescopeDetectorElement>>& detectorStore,
     const std::vector<double>& positions, const std::array<std::array<double, 6>, 3>& offsets,
+    const std::array<std::array<double, 6>, 3>& rotations,
     const std::array<double, 2>& bounds, double thickness,
     AlignedTelescopeSurfaceType surfaceType,
     Acts::BinningValue binValue = Acts::BinningValue::binZ, int rnd=252, double sigmaInPlane=0., double sigmaOutPlane=0.,

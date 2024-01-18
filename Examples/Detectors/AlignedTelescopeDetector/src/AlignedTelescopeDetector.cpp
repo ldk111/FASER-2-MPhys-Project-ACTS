@@ -57,7 +57,7 @@ auto ActsExamples::AlignedTelescope::AlignedTelescopeDetector::finalize(
   // 	);
 
   TrackingGeometryPtr gGeometry = ActsExamples::AlignedTelescope::buildDetector(
-      nominalContext, detectorStore, positions, cfg.offsets, cfg.bounds,
+      nominalContext, detectorStore, positions, cfg.offsets, cfg.rotations, cfg.bounds,
       cfg.thickness,
       static_cast<ActsExamples::AlignedTelescope::AlignedTelescopeSurfaceType>(
           cfg.surfaceType),
