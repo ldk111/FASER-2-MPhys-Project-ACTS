@@ -150,15 +150,15 @@ ActsExamples::AlignedTelescope::buildDetector(
     //NEW CODE
     Acts::Translation3 trans(offsets[0][i], offsets[1][i], positions[i] + offsets[2][i]);
 
-    // The transform
-
-    Acts::Transform3 trafo(rotation * trans);
-
     // Apply rotation in each axis to each plane
 
-    trafo *= Acts::AngleAxis3(rotations[0][i], Acts::Vector3::UnitX());
-    trafo *= Acts::AngleAxis3(rotations[1][i], Acts::Vector3::UnitY());
-    trafo *= Acts::AngleAxis3(rotations[2][i], Acts::Vector3::UnitZ());
+    rot_x = Acts::AngleAxis3(rotations[0][i], Acts::Vector3::UnitX());
+    rot_y = Acts::AngleAxis3(rotations[1][i], Acts::Vector3::UnitY());
+    rot_z = Acts::AngleAxis3(rotations[2][i], Acts::Vector3::UnitZ());
+
+    // The transform
+
+    Acts::Transform3 trafo(rotation * rot_x * rot_y * rot_z * trans);
 
     applyTransform(trafo, rng,sigmaInPlane, sigmaOutPlane, sigmaOutRot, sigmaInRot);
     // Create the detector element
