@@ -152,7 +152,7 @@ ActsExamples::AlignedTelescope::buildDetector(
 
     // The transform
 
-    Acts::Transform3 trafo(rotation * Acts::Translation3(0,0,positions[i]) Acts::AngleAxis3(rotations[0][i], Acts::Vector3::UnitX()) * Acts::AngleAxis3(rotations[1][i], Acts::Vector3::UnitY()) * Acts::AngleAxis3(rotations[2][i], Acts::Vector3::UnitZ()) * trans);
+    Acts::Transform3 trafo(rotation * Acts::Translation3(0,0,positions[i]) * Acts::AngleAxis3(rotations[0][i], Acts::Vector3::UnitX()) * Acts::AngleAxis3(rotations[1][i], Acts::Vector3::UnitY()) * Acts::AngleAxis3(rotations[2][i], Acts::Vector3::UnitZ()) * trans);
 
     applyTransform(trafo, rng,sigmaInPlane, sigmaOutPlane, sigmaOutRot, sigmaInRot);
     // Create the detector element
